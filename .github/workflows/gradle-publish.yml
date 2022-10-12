@@ -43,6 +43,6 @@ jobs:
         REPO: docker_ci
       run: |
         docker build -t $REPO .
-        docker tag $REPO: latest $NAME/$REPO: latest
+        docker tag $REPO:latest $NAME/$REPO:latest
         docker push $NAME/$REPO:latest
       
