@@ -1,0 +1,13 @@
+version: "3.9"
+services:
+  spring-project:
+    container_name: spring-project
+    build: ./
+    ports:
+      - "8080:8000"
+    volumes:
+      - ./secret:/app/secret
+    environment:
+      - SERVER_MODE=prod
+      - PORT=8090
+      - LOCATION=./secret/config/spring
