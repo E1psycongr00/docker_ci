@@ -5,7 +5,6 @@ import com.example.docker_ci.entity.MemberEntity;
 import com.example.docker_ci.mapper.MemberMapper;
 import com.example.docker_ci.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.crossstore.ChangeSetPersister.NotFoundException;
 import org.springframework.stereotype.Service;
 
 @Service
