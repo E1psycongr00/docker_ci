@@ -24,3 +24,13 @@ services:
     command:
       - --character-set-server=utf8mb4
       - --collation-server=utf8mb4_unicode_ci
+  redis:
+    image: redis:alpine
+    command: redis-server --requirepass docker_ci --port 6379
+    container_name: redis
+    hostname: docker_ci
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    ports:
+      - "6379:6379"
