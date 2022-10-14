@@ -19,6 +19,18 @@ jobs:
       with:
         java-version: '11'
         distribution: 'temurin'
+    - name: Set Docker Container before build and test
+      run: docker-compose up -d
+
+    - name: Gradle Caching
+      uses: actions/cache@v3
+      with:
+        path: |
+          ~/.gradle/caches
+          ~/.gradle/wrapper
+        key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        restore-keys: |
+          ${{ runner.os }}-gradle-
 
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
@@ -32,4 +44,7 @@ jobs:
       if: ${{ always() }}  # 테스트가 실패하여도 Report를 보기 위해 `always`로 설정
       with:
         files: build/test-results/**/*.xml
+    
+    - name: Close Docker Container after build and test
+      run: docker-compose down
     

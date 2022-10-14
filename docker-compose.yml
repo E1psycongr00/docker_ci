@@ -1,13 +1,36 @@
 version: "3.9"
 services:
-  spring-project:
-    container_name: spring-project
-    build: ./
+#  spring-project:
+#    container_name: spring-project
+#    build: ./
+#    ports:
+#      - "8080:8000"
+#    volumes:
+#      - ./secret:/app/secret
+#    environment:
+#      - SERVER_MODE=prod
+#      - PORT=8090
+#      - LOCATION=./secret/config/spring
+  sql-db:
+    container_name: my-sql
+    image: mysql:8.0
     ports:
-      - "8080:8000"
-    volumes:
-      - ./secret:/app/secret
+      - "3306:3306"
     environment:
-      - SERVER_MODE=prod
-      - PORT=8090
-      - LOCATION=./secret/config/spring
+      - MYSQL_DATABASE=testdb
+      - MYSQL_ROOT_HOST=%
+      - MYSQL_ROOT_PASSWORD=1234
+      - TZ=Asia/Seoul
+    command:
+      - --character-set-server=utf8mb4
+      - --collation-server=utf8mb4_unicode_ci
+  redis:
+    image: redis:alpine
+    command: redis-server --requirepass docker_ci --port 6379
+    container_name: redis
+    hostname: docker_ci
+    labels:
+      - "name=redis"
+      - "mode=standalone"
+    ports:
+      - "6379:6379"
