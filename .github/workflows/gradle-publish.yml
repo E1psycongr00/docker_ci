@@ -25,6 +25,9 @@ jobs:
         java-version: '11'
         distribution: 'temurin'
 
+    - name: Set Docker Container before build and test
+      run: docker-compose up -d
+
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
       
@@ -55,4 +58,6 @@ jobs:
         docker build -t $REPO .
         docker tag $REPO:latest $NAME/$REPO:latest
         docker push $NAME/$REPO:latest
-      
+
+    - name: Close Docker Container after build and test
+      run: docker-compose down
