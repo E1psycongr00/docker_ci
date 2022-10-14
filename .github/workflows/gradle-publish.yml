@@ -70,5 +70,6 @@ jobs:
         username: ${{ secrets.PROD_EC2_USERNAME }}
         port: 22
         script: |
-          docker image prune -f
+          sudo docker image prune -f
+          sudo docker pull limhyeongyu/docker_ci:latest
           
