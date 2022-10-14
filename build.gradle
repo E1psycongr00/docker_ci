@@ -2,6 +2,7 @@ plugins {
 	id 'org.springframework.boot' version '2.7.4'
 	id 'io.spring.dependency-management' version '1.0.14.RELEASE'
 	id 'java'
+	id 'groovy'
 }
 
 group = 'com.example'
@@ -16,10 +17,17 @@ configurations {
 
 repositories {
 	mavenCentral()
+	maven { url 'https://jitpack.io' }
+}
+
+ext {
+	set('snippetsDir', file("build/generated-snippets"))
 }
 
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
+
+	// database
 	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
 	implementation 'mysql:mysql-connector-java'
 	implementation 'com.h2database:h2:2.1.214'
@@ -39,6 +47,11 @@ dependencies {
 	developmentOnly 'org.springframework.boot:spring-boot-devtools'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+
+	// spock
+	testImplementation 'org.spockframework.spock:spock-core:spock-2.3'
+	testImplementation 'org.spockframework.spock:spock-spring:spock-2.3'
+
 }
 
 tasks.named('test') {
