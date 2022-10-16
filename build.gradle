@@ -26,10 +26,6 @@ ext {
 	set('snippetsDir', file("build/generated-snippets"))
 }
 
-test {
-	outputs.dir snippetsDir
-}
-
 dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-web'
 
@@ -78,5 +74,6 @@ bootJar {
 }
 
 tasks.named('test') {
+	outputs.dir snippetsDir
 	useJUnitPlatform()
 }
