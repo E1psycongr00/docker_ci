@@ -49,8 +49,6 @@ jobs:
       # uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70
       uses: codecov/codecov-action@v3.1.1
       with:
-        # Repository upload token - get it from codecov.io. Required only for private repositories
-        token: ${{secrets.CODE_COV_TOKEN}}
         # Comma-separated list of files to upload
         files: ./build/reports/jacoco/test/jacocoTestReport.xml
     
