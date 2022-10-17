@@ -1,10 +1,10 @@
 plugins {
-	id 'org.springframework.boot' version '2.7.4'
-	id 'io.spring.dependency-management' version '1.0.14.RELEASE'
-	id "org.asciidoctor.jvm.convert" version "3.3.2"
-	id 'java'
-	id 'groovy'
-	id 'jacoco'
+    id 'org.springframework.boot' version '2.7.4'
+    id 'io.spring.dependency-management' version '1.0.14.RELEASE'
+    id "org.asciidoctor.jvm.convert" version "3.3.2"
+    id 'java'
+    id 'groovy'
+    id 'jacoco'
 }
 
 group = 'com.example'
@@ -12,123 +12,131 @@ version = '0.0.1-SNAPSHOT'
 sourceCompatibility = '11'
 
 configurations {
-	compileOnly {
-		extendsFrom annotationProcessor
-	}
-	asciidoctorExtensions
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+    asciidoctorExtensions
 }
 
 repositories {
-	mavenCentral()
-	maven { url 'https://jitpack.io' }
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
 }
 
 jacoco {
-	toolVersion = '0.8.7'
+    toolVersion = '0.8.7'
 }
 
 ext {
-	set('snippetsDir', file("build/generated-snippets"))
+    set('snippetsDir', file("build/generated-snippets"))
 }
 
 dependencies {
-	implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-web'
 
-	// database
-	implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
-	implementation 'mysql:mysql-connector-java'
-	implementation 'com.h2database:h2:2.1.214'
+    // database
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'mysql:mysql-connector-java'
+    implementation 'com.h2database:h2:2.1.214'
 
-	//Redis
-	implementation 'org.springframework.boot:spring-boot-starter-data-redis'
+    //Redis
+    implementation 'org.springframework.boot:spring-boot-starter-data-redis'
 
-	// bean validation
-	implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // bean validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
 
-	// map struct
-	implementation 'org.mapstruct:mapstruct:1.4.2.Final'
-	annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
-	annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
+    // map struct
+    implementation 'org.mapstruct:mapstruct:1.4.2.Final'
+    annotationProcessor 'org.mapstruct:mapstruct-processor:1.4.2.Final'
+    annotationProcessor 'org.projectlombok:lombok-mapstruct-binding:0.2.0'
 
-	compileOnly 'org.projectlombok:lombok'
-	developmentOnly 'org.springframework.boot:spring-boot-devtools'
-	annotationProcessor 'org.projectlombok:lombok'
-	testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    compileOnly 'org.projectlombok:lombok'
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 
-	// spock
-	testImplementation 'org.spockframework.spock:spock-core:spock-2.3'
-	testImplementation 'org.spockframework.spock:spock-spring:spock-2.3'
+    // spock
+    testImplementation 'org.spockframework.spock:spock-core:spock-2.3'
+    testImplementation 'org.spockframework.spock:spock-spring:spock-2.3'
 
-	// restdocs
-	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+    // restdocs
+    testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
+    asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
 }
 
 jacocoTestReport {
-	reports {
-		html.enabled(true)
-		xml.enabled(true)
-		csv.enabled(false)
+    reports {
+        html.enabled(true)
+        xml.enabled(true)
+        csv.enabled(false)
 
 //		//  각 리포트 타입마다 리포트 저장 경로를 설정할 수 있습니다.
 //		html.destination file("src/jacoco/jacoco.html")
 //		xml.destination file("src/jacoco/jacoco.xml")
-	}
+    }
+    dependsOn test
+
+    afterEvaluate {
+        classDirectories.setFrom(files(classDirectories.files.collect {
+            fileTree(dir: it,
+                    excludes: [] + ["**/mapper"])
+        }))
+    }
+
+    finalizedBy 'jacocoTestCoverageVerification'
 }
 
 jacocoTestCoverageVerification {
-	violationRules {
-		rule {
-			enabled = true
-			element =  'CLASS' // 클래스 단위로 커버리지 체크
+    violationRules {
+        rule {
+            enabled = true
+            element = 'CLASS' // 클래스 단위로 커버리지 체크
 
-					// 라인 커버리지 제한을 80% 설정
-			limit {
-				counter = 'LINE'
-				value = 'COVEREDRATIO'
-				minimum = 0.80
-			}
+            // 라인 커버리지 제한을 80% 설정
+            limit {
+                counter = 'LINE'
+                value = 'COVEREDRATIO'
+                minimum = 0.40
+            }
 
-			// 빈 줄을 제외한 코드의 라인수를 최대 200라인으로 제한합니다.
-			limit {
-				counter = 'LINE'
-				value = 'TOTALCOUNT'
-				maximum = 500
-			}
-		}
-
-
-
+            // 빈 줄을 제외한 코드의 라인수를 최대 200라인으로 제한합니다.
+            limit {
+                counter = 'LINE'
+                value = 'TOTALCOUNT'
+                maximum = 200
+            }
+            excludes = [] + ["**/mapper"]
+        }
 
 
-	}
+    }
 }
 
 asciidoctor {
-	inputs.dir snippetsDir
-	configurations 'asciidoctorExtensions'
-	dependsOn test
+    inputs.dir snippetsDir
+    configurations 'asciidoctorExtensions'
+    dependsOn test
 
-	sources {
-		include("index.adoc")
-	}
+    sources {
+        include("index.adoc")
+    }
 
-	baseDirFollowsSourceDir()
+    baseDirFollowsSourceDir()
 }
 
 asciidoctor.doFirst {
-	delete file('src/main/resources/static/docs')
+    delete file('src/main/resources/static/docs')
 }
 
 tasks.named('test') {
-	outputs.dir snippetsDir
-	useJUnitPlatform()
-	finalizedBy 'jacocoTestReport'
+    outputs.dir snippetsDir
+    useJUnitPlatform()
+    finalizedBy 'jacocoTestReport'
 }
 
 bootJar {
-	dependsOn asciidoctor
-	from('build/docs/asciidoc/') {
-		into 'static/docs'
-	}
+    dependsOn asciidoctor
+    from('build/docs/asciidoc/') {
+        into 'static/docs'
+    }
 }
